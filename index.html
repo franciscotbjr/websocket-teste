@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <title>WebSockets</title>
+    </head>
+    <body>
+        <script>
+            var notificationSession = {};
+            var user = {
+                        userEmail:"teste@compline.com.br",
+                        userCpf:"24100056000186"
+                    };
+            var message = {
+                head: {
+                    applicationId:"5deac798bc1aa8245827e636",
+                    route: 'login',
+                    user: {
+                        ...user
+                    }
+                },
+                payload: {}
+            }
+            var sock = new WebSocket("ws://localhost:8080");
+            sock.onopen = function(event) {
+                console.log("Socket connected successfully");
+                console.log(event);
+                setTimeout(function() {
+                    sock.send(JSON.stringify(message));
+                }, 3000);
+            }
+            
+            sock.onmessage = function(event) {
+                console.log(event.data);
+                if(event && event.data) {
+                    var data = JSON.parse(event.data);
+                    if(data.head.route === 'login') {
+                        if(data.head.id) {
+                            notificationSession.id = data.head.id;
+                        }
+                        var message = {
+                            head: {
+                                id: notificationSession.id,
+                                applicationId:"5deac798bc1aa8245827e636",
+                                route: '/process/current',
+                                user: {
+                                    ...user
+                                }
+                            },
+                            payload: {}
+                        }
+                        sock.send(JSON.stringify(message));
+                    } else if(data.head.route === '/process/current') {
+                        alert(data.payload.processId);
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>

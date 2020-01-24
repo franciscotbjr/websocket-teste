@@ -1,0 +1,8 @@
+node_modules/
+.idea/
+*.iml
+mongo-teste/
+documentos/*
+.npmrc
+coverage/
+.nyc_output/
