@@ -32,6 +32,9 @@ wss.on('connection', function(ws) {
             if(message.head.id) {
                 // Já Logado
                 // 1) Validar o Id
+                // TODO
+                // 2) Navegar buscado a rota
+                // FIXME: Será um Loop sobre uma lista
                 if (message.head.route === '/process/current') {
                     let responseMessage = {
                         head: {
