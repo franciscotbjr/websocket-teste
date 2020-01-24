@@ -23,7 +23,7 @@ const wss = new WebSocket.Server({
   }
 });
 
-let sockets = [];
+const sockets = [];
 
 wss.on('connection', function(ws) {
     ws.on('message', (msg) => {
@@ -44,7 +44,16 @@ wss.on('connection', function(ws) {
                             processId: "ada2156asdasd66asdas"
                         }
                     }
-                    ws.send(JSON.stringify(responseMessage));
+
+                    // Testando a recuperação do socket já armazenado
+                    for(let i = 0; i <= sockets.length; i++) {
+                        const session = sockets[i];
+                        if(session.id === message.head.id) {
+                            session.ws.send(JSON.stringify(responseMessage));
+                            console.log(session.ws == ws);
+                            return;
+                        }
+                    }
                 }
             } else if (message.head.route) {
                 // Será um Loop sobre uma lista
